@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhaseLock — Physics in 2-Steps</title>
+<meta name="description" content="Locking Motion Priors Before Visual Refinement Erases Them. ICML 2026.">
+<meta property="og:title" content="PhaseLock: Physics in 2-Steps">
+<meta property="og:description" content="Training-free motion prior locking for physically-consistent video diffusion.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="venue-tag">ICML 2026</div>
+    <h1 class="title">
+      <span class="title-emph">Physics in 2-Steps:</span><br>
+      Locking Motion Priors Before Visual Refinement Erases Them
+    </h1>
+
+    <div class="authors">
+      <a href="#" class="author">Woojung Han<sup>1</sup></a>
+      <a href="#" class="author">Seil Kang<sup>1</sup></a>
+      <a href="#" class="author">Youngjun Jun<sup>1</sup></a>
+      <a href="#" class="author">Min-Hung Chen<sup>2</sup></a>
+      <a href="#" class="author">Fu-En Yang<sup>2</sup></a>
+      <a href="#" class="author">Seong Jae Hwang<sup>1</sup></a>
+    </div>
+    <div class="affils">
+      <span><sup>1</sup>Yonsei University</span>
+      <span><sup>2</sup>NVIDIA</span>
+    </div>
+
+    <div class="buttons">
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+        Paper <span class="soon">soon</span>
+      </a>
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93A8.01 8.01 0 0 1 4 12c0-.61.07-1.2.19-1.77L9 15v1a2 2 0 0 0 2 2v1.93zm6.9-2.54A2 2 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A8 8 0 0 1 20 12a7.96 7.96 0 0 1-2.1 5.39z"/></svg>
+        arXiv <span class="soon">soon</span>
+      </a>
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Code <span class="soon">soon</span>
+      </a>
+      <a class="btn" href="#gallery">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 4h16v2H4zm0 14h16v2H4zM3 7h18v10H3z"/></svg>
+        Gallery
+      </a>
+    </div>
+
+    <div class="tldr">
+      <strong>TL;DR.</strong> A 2-step generation often has <em>better physics</em> than the full 50-step output.
+      We trace this to <em>phase erosion</em> during denoising, and introduce
+      <strong>PhaseLock</strong> — a training-free framework that locks the early motion prior
+      into the final high-fidelity output via <em>Latent Delta Guidance</em>.
+      <span class="tldr-stat">+6.2 pts</span> physical consistency,
+      <span class="tldr-stat">1.06×</span> time,
+      <span class="tldr-stat">1.02×</span> memory.
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════ TEASER VIDEO ═══════════════════ -->
+<section class="teaser">
+  <div class="container">
+    <div class="teaser-grid">
+      <figure class="teaser-item">
+        <video src="videos/highlights/physics-iq/0143_BASE_wan.mp4" autoplay muted loop playsinline></video>
+        <figcaption><span class="label label-base">Base (Wan 2.1, 50 steps)</span></figcaption>
+      </figure>
+      <figure class="teaser-item">
+        <video src="videos/highlights/physics-iq/0143_OURS_wan.mp4" autoplay muted loop playsinline></video>
+        <figcaption><span class="label label-ours">+ PhaseLock (ours)</span></figcaption>
+      </figure>
+    </div>
+    <p class="teaser-caption">
+      Dropping a potato into water. The baseline produces static, implausible motion;
+      PhaseLock preserves the physics of displacement and splash.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════ KEY INSIGHT (fig1) ═══════════════════ -->
+<section class="section" id="insight">
+  <div class="container narrow">
+    <h2>The Counter-Intuitive Finding</h2>
+    <p class="section-intro">
+      Running fewer denoising steps <em>should</em> hurt quality — yet we find the opposite for physics.
+    </p>
+
+    <div class="fig-block">
+      <img src="static/images/fig1.webp" alt="Overview of PhaseLock" loading="lazy">
+      <figcaption>
+        <strong>Figure 1. Overview of PhaseLock.</strong> Few-step inference (<code>T=2</code>) captures accurate
+        physical motion but lacks texture; standard inference (<code>T=50</code>) achieves photorealism but hallucinates
+        the motion. PhaseLock extracts the motion prior from the 2-step trajectory and injects it during the
+        50-step denoising — recovering both fidelity and physics.
+      </figcaption>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">~18%</div>
+        <div class="stat-label">phase degradation<br>from step 2 → step 50</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">inference steps<br>enough for valid physics</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">+6.2</div>
+        <div class="stat-label">avg. points improvement<br>in physical consistency</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1.06×</div>
+        <div class="stat-label">wall-clock overhead<br>(no training)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ABSTRACT ═══════════════════ -->
+<section class="section" id="abstract">
+  <div class="container narrow">
+    <h2>Abstract</h2>
+    <p>
+      Image-to-Video diffusion models leverage input images to generate visually stunning content, yet frequently
+      produce motion that violates physical laws. We reveal a surprising finding: a <em>2-step generation often
+      exhibits better physical consistency than a 50-step output</em> from the same model. Through spectral analysis,
+      we trace this to <em>phase erosion</em> during denoising: the phase degrades significantly (dropping by
+      ≈18% from step 2 to step 50), whereas the magnitude remains relatively stable.
+    </p>
+    <p>
+      Building on this insight, we propose <strong>PhaseLock</strong>, a training-free framework that locks the valid
+      motion priors into the denoising trajectory found in few-step inference. Rather than requiring 50 steps to
+      establish physics, PhaseLock extracts a motion prior from just 2 steps and enforces it onto high-fidelity
+      generation via <em>Latent Delta Guidance</em>. Extensive experiments show an average improvement of
+      <strong>6.2 points</strong> across diverse models with negligible overhead
+      (<strong>1.06×</strong> time, <strong>1.02×</strong> memory), eliminating the need for expensive external
+      guidance methods (~5× time).
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════ ANALYSIS (fig3) ═══════════════════ -->
+<section class="section" id="analysis">
+  <div class="container narrow">
+    <h2>Why Does This Happen? Phase Erosion</h2>
+    <p class="section-intro">
+      Motion is encoded in the <em>phase</em> spectrum; texture lives in the <em>magnitude</em>.
+      The denoising chain refines magnitude at the cost of phase — quietly erasing the physics.
+    </p>
+
+    <div class="fig-block">
+      <img src="static/images/fig3.webp" alt="Phase property analysis" loading="lazy">
+      <figcaption>
+        <strong>Figure 3. Further analysis on phase properties.</strong>
+        <em>(a) Blur control:</em> even with Gaussian blur matched to the 2-step sharpness, the 2-step output
+        retains significantly higher Phase Temporal Correlation — phase loss is <strong>structural</strong>, not
+        a frequency artifact.
+        <em>(b) Phase Sensitivity:</em> physical dynamics degrade rapidly under phase corruption,
+        while magnitude corruption has little effect.
+      </figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ METHOD (fig4) ═══════════════════ -->
+<section class="section" id="method">
+  <div class="container narrow">
+    <h2>Method: PhaseLock</h2>
+    <p class="section-intro">
+      A drop-in, training-free procedure in two stages.
+    </p>
+
+    <div class="fig-block">
+      <img src="static/images/fig4.webp" alt="PhaseLock pipeline" loading="lazy">
+      <figcaption>
+        <strong>Figure 4. The overall pipeline of PhaseLock.</strong>
+        <strong>(1) Motion Prior Extraction.</strong> A short 2-step trajectory yields coarse but physically valid
+        motion dynamics.
+        <strong>(2) Latent Delta Guidance.</strong> The per-frame motion delta is transferred into the standard
+        denoising process, biasing the 50-step path toward the extracted prior — without any fine-tuning.
+      </figcaption>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Extract</h3>
+        <p>Run 2 denoising steps to obtain a coarse latent sequence <code>z<sub>2</sub></code>.
+           Its frame-to-frame deltas encode the motion prior.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Lock</h3>
+        <p>Compute motion prior <code>Δ<sub>phys</sub> = z<sub>2</sub><sup>(t+1)</sup> − z<sub>2</sub><sup>(t)</sup></code>
+           — a target dynamics signal grounded in physically-valid evolution.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Guide</h3>
+        <p>During the 50-step run, add <em>Latent Delta Guidance</em> with strength <code>λ = 0.05</code>
+           (linear decay) to align the high-fidelity trajectory to <code>Δ<sub>phys</sub></code>.</p>
+      </div>
+    </div>
+
+    <!-- ───── Interactive Simulation ───── -->
+    <div class="sub">Interactive walkthrough</div>
+    <p class="section-intro" style="margin-bottom:20px;">
+      Drag the slider (or press play) to trace the denoising process.
+      Watch <em>Phase</em> erode on the baseline path while PhaseLock keeps it locked after step 2.
+    </p>
+
+    <div class="sim" id="sim">
+      <div class="sim-phase-tag" id="sim-phase-tag">Input</div>
+
+      <svg class="sim-stage" viewBox="0 0 820 330" xmlns="http://www.w3.org/2000/svg" aria-label="PhaseLock pipeline animation">
+        <defs>
+          <linearGradient id="latentGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#c7d2fe"/>
+            <stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+          <linearGradient id="priorGlow" x1="0" x2="1">
+            <stop offset="0%" stop-color="#d1fae5"/>
+            <stop offset="100%" stop-color="#a7f3d0"/>
+          </linearGradient>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#059669"/>
+          </marker>
+          <marker id="arrow-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+          </marker>
+          <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Input -->
+        <g id="sim-input">
+          <rect x="24" y="135" width="80" height="64" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="64" y="171" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter, sans-serif" font-weight="500">Input</text>
+          <text x="64" y="186" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter, sans-serif">image</text>
+        </g>
+
+        <!-- Branch connectors -->
+        <path d="M 104 156 C 124 156, 130 82, 158 82" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+        <path d="M 104 180 C 124 180, 130 252, 158 252" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+
+        <!-- TOP: 2-step fast path -->
+        <text x="260" y="42" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter, sans-serif" font-weight="600" letter-spacing="1.4">FEW INFERENCE · MOTION PRIOR</text>
+        <g id="fast-step-1" class="sim-latent">
+          <rect x="158" y="58" width="52" height="52" rx="8" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+          <text x="184" y="88" text-anchor="middle" font-size="11" fill="#475569" font-family="JetBrains Mono, monospace" font-weight="600">t=1</text>
+        </g>
+        <line x1="210" y1="84" x2="232" y2="84" stroke="#cbd5e1" stroke-width="1.5"/>
+        <g id="fast-step-2" class="sim-latent">
+          <rect x="232" y="58" width="52" height="52" rx="8" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+          <text x="258" y="88" text-anchor="middle" font-size="11" fill="#475569" font-family="JetBrains Mono, monospace" font-weight="600">t=2</text>
+        </g>
+        <line x1="284" y1="84" x2="320" y2="84" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)" id="to-prior-line"/>
+        <g id="motion-prior">
+          <rect x="320" y="54" width="120" height="60" rx="12" fill="url(#priorGlow)" stroke="#059669" stroke-width="1.5"/>
+          <text x="380" y="78" text-anchor="middle" font-size="14" fill="#065f46" font-family="Inter, sans-serif" font-weight="700">Δ<tspan font-size="10" baseline-shift="sub">phys</tspan></text>
+          <text x="380" y="96" text-anchor="middle" font-size="10.5" fill="#059669" font-family="Inter, sans-serif">motion prior</text>
+        </g>
+
+        <!-- BOTTOM: 50-step path -->
+        <text x="260" y="310" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter, sans-serif" font-weight="600" letter-spacing="1.4">STANDARD 50-STEP · HIGH-FIDELITY REFINEMENT</text>
+        <rect x="158" y="228" width="418" height="48" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <rect id="slow-progress" x="158" y="228" width="0" height="48" rx="10" fill="url(#latentGrad)"/>
+        <text id="slow-step-text" x="367" y="257" text-anchor="middle" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace" font-weight="600">t = 0 / 50</text>
+
+        <!-- Injection arrow: from Δ_phys down into the 50-step path -->
+        <path id="inject-arrow" d="M 380 114 L 380 228" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow-green)" opacity="0"/>
+        <text id="inject-label" x="392" y="178" font-size="10.5" fill="#059669" font-family="Inter, sans-serif" font-weight="600" opacity="0">Latent Δ Guidance</text>
+
+        <!-- Output -->
+        <line x1="576" y1="252" x2="606" y2="252" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-slate)"/>
+        <g id="sim-output">
+          <rect x="606" y="228" width="190" height="48" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text id="output-label" x="701" y="257" text-anchor="middle" font-size="12" fill="#94a3b8" font-family="Inter, sans-serif" font-weight="500">waiting…</text>
+        </g>
+      </svg>
+
+      <!-- Metrics -->
+      <div class="sim-metrics">
+        <div class="metric">
+          <div class="metric-head">
+            <span class="metric-label">Phase integrity · <strong>Baseline</strong></span>
+            <span class="metric-val" id="phase-base-val">100%</span>
+          </div>
+          <div class="meter"><div class="meter-fill meter-fill-base" id="phase-base-bar" style="width:100%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-head">
+            <span class="metric-label">Phase integrity · <strong>PhaseLock</strong></span>
+            <span class="metric-val metric-val-ours" id="phase-ours-val">100%</span>
+          </div>
+          <div class="meter"><div class="meter-fill meter-fill-ours" id="phase-ours-bar" style="width:100%"></div></div>
+        </div>
+      </div>
+
+      <!-- Minimal progress line (also clickable to scrub) -->
+      <div class="sim-progress" id="sim-progress" role="slider" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0">
+        <div class="sim-progress-fill" id="sim-progress-fill"></div>
+        <div class="sim-marker sim-marker-1" title="Step 1"></div>
+        <div class="sim-marker sim-marker-2" title="Step 2"></div>
+      </div>
+
+      <div class="sim-footer">
+        <span class="sim-note">Illustrative trend — phase drops ~18% on baseline, stays locked on PhaseLock.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ RESULTS ═══════════════════ -->
+<section class="section" id="results">
+  <div class="container narrow">
+    <h2>Results</h2>
+
+    <h3 class="sub">Qualitative — Physics-IQ</h3>
+    <div class="fig-block">
+      <img src="static/images/fig5.webp" alt="Qualitative results on Physics-IQ" loading="lazy">
+      <figcaption>
+        <strong>Figure 5.</strong> Across diverse scenarios — fluid displacement, rigid-body drop, capillary flow —
+        PhaseLock restores physically consistent motion that the baseline fails to produce.
+      </figcaption>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 class="sub">Efficiency</h3>
+        <div class="fig-block">
+          <img src="static/images/fig7.webp" alt="Efficiency vs performance" loading="lazy">
+          <figcaption>
+            <strong>Figure 7.</strong> Comparable latency and memory to the baseline — gains without a
+            <em>N×</em> cost. Other inference-time guidance methods need &gt;5× the compute for similar gains.
+          </figcaption>
+        </div>
+      </div>
+      <div>
+        <h3 class="sub">Ablation</h3>
+        <div class="fig-block">
+          <img src="static/images/fig6.webp" alt="Hyperparameter ablation" loading="lazy">
+          <figcaption>
+            <strong>Figure 6.</strong> Peaks at motion strength <code>λ<sub>0</sub>=0.05</code> and
+            <code>NFE=2</code>; performance monotonically degrades as the prior trajectory lengthens,
+            consistent with the phase-erosion theory.
+          </figcaption>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-numbers">
+      <div class="kn">
+        <div class="kn-value">74%</div>
+        <div class="kn-label">of Physics-IQ scenarios improved<br>on Wan 2.1 (49 / 66)</div>
+      </div>
+      <div class="kn">
+        <div class="kn-value">67%</div>
+        <div class="kn-label">improved on CogVideoX-5b<br>(44 / 66)</div>
+      </div>
+      <div class="kn">
+        <div class="kn-value">93%</div>
+        <div class="kn-label">of fluid-dynamics scenarios<br>improved (Wan 2.1)</div>
+      </div>
+      <div class="kn">
+        <div class="kn-value">88%</div>
+        <div class="kn-label">of optics scenarios<br>improved (CogVideoX)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GALLERY ═══════════════════ -->
+<section class="section" id="gallery">
+  <div class="container">
+    <h2>Video Gallery</h2>
+    <p class="section-intro">
+      Side-by-side comparisons on <strong>PhyGenBench</strong> and <strong>Physics-IQ</strong>.
+      Highlights are bundled with this page; the full set of 45 pairs streams from the
+      <a href="https://phaselock-physical-video.github.io/" target="_blank" rel="noopener">media gallery</a>.
+      Hover any panel to play.
+    </p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="phygenbench" role="tab">PhyGenBench</button>
+      <button class="tab" data-tab="physics-iq" role="tab">Physics-IQ</button>
+    </div>
+
+    <div id="gallery-content"></div>
+
+    <div class="gallery-footer">
+      <button id="load-all" class="btn-secondary">Load remaining pairs from media gallery</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ BIBTEX ═══════════════════ -->
+<section class="section section-alt" id="bibtex">
+  <div class="container narrow">
+    <h2>Citation</h2>
+    <pre class="bibtex"><code>@inproceedings{han2026phaselock,
+  title     = {Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them},
+  author    = {Han, Woojung and Kang, Seil and Jun, Youngjun and
+               Chen, Min-Hung and Yang, Fu-En and Hwang, Seong Jae},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2026}
+}</code></pre>
+    <button id="copy-bib" class="btn-secondary">Copy BibTeX</button>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>
+      Contact:
+      <a href="mailto:dnwjddl@yonsei.ac.kr">dnwjddl@yonsei.ac.kr</a>
+      · Page template inspired by academic project pages.
+    </p>
+  </div>
+</footer>
+
+<script src="static/js/gallery.js"></script>
+<script src="static/js/simulation.js"></script>
+</body>
+</html>

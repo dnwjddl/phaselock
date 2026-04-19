@@ -2,10 +2,10 @@
   const demo = document.getElementById('demo');
   if (!demo) return;
 
-  const inputCard = demo.querySelector('[data-stage="input"]');
-  const laneBase  = demo.querySelector('[data-stage="baseline"]');
-  const laneOurs  = demo.querySelector('.demo-lane-ours');
-  const step2Card = demo.querySelector('[data-stage="step2"]');
+  const cardInput = demo.querySelector('[data-stage="input"]');
+  const cardBase  = demo.querySelector('[data-stage="baseline"]');
+  const cardStep2 = demo.querySelector('[data-stage="step2"]');
+  const cardOurs  = demo.querySelector('[data-stage="ours"]');
 
   const videoStep2 = document.getElementById('video-step2');
   const videoBase  = document.getElementById('video-base');
@@ -17,10 +17,12 @@
   const overlayOurs  = document.getElementById('overlay-ours');
 
   const statusBase  = document.getElementById('status-base');
+  const statusStep2 = document.getElementById('status-step2');
   const statusFinal = document.getElementById('status-final');
 
   const deltaCard = document.getElementById('delta-card');
-  const injectConnector = document.getElementById('inject-connector');
+  const injectArrow = document.getElementById('inject-connector');
+  const compareHint = document.getElementById('compare-hint');
   const resetBtn  = document.getElementById('demo-reset');
 
   const STEP2_RATE = 2.5;
@@ -48,60 +50,77 @@
     overlayStep2Text.textContent = 'Encoding…';
 
     off(deltaCard, 'is-ready');
-    off(injectConnector, 'is-flowing');
+    off(injectArrow, 'is-flowing');
+    off(compareHint, 'is-ready');
 
-    on(inputCard, 'is-active');
-    [laneBase, laneOurs].forEach(el => {
+    on(cardInput, 'is-active');
+    [cardBase, cardStep2, cardOurs].forEach(el => {
       off(el, 'is-active');
       off(el, 'is-done');
+      off(el, 'is-compare-ref');
+      off(el, 'is-compare-ours');
     });
 
     setStatus(statusBase, 'waiting', null);
+    setStatus(statusStep2, 'waiting', null);
     setStatus(statusFinal, 'waiting', null);
   };
 
   const play = () => {
-    // t=500ms: BOTH lanes activate in parallel (same input feeds both)
+    // ── ② Baseline first ──────────────────────────────────────
     at(500, () => {
-      on(laneBase, 'is-active');
-      on(laneOurs, 'is-active');
+      on(cardBase, 'is-active');
       setStatus(statusBase, 'running', 'running');
-      setStatus(statusFinal, 'running', 'running');
     });
-
-    // Step 2 overlay phases (bottom lane only)
-    const phases = ['Encoding…', 'Step 1/2…', 'Step 2/2…', 'Extracting Δphys…'];
-    phases.forEach((t, i) => {
-      at(500 + i * 320, () => { overlayStep2Text.textContent = t; });
-    });
-
-    // t=1800ms: Step 2 finishes — its video plays fast
-    at(1800, () => {
-      hide(overlayStep2);
-      videoStep2.playbackRate = STEP2_RATE;
-      videoStep2.play().catch(() => {});
-    });
-
-    // t=2400ms: Δphys chip emerges
-    at(2400, () => { on(deltaCard, 'is-ready'); });
-
-    // t=3000ms: Δphys flows into the PhaseLock 50-step path
-    at(3000, () => { on(injectConnector, 'is-flowing'); });
-
-    // t=5200ms: baseline output becomes ready (unguided 50-step)
-    at(5200, () => {
+    at(2400, () => {
       hide(overlayBase);
       videoBase.play().catch(() => {});
       setStatus(statusBase, '50 steps ✓', 'done');
-      on(laneBase, 'is-done');
+      on(cardBase, 'is-done');
     });
 
-    // t=5600ms: PhaseLock output becomes ready (guided 50-step)
-    at(5600, () => {
+    // ── ③ Step 2 reveal (same model, dramatic) ────────────────
+    at(3400, () => {
+      on(cardStep2, 'is-active');
+      setStatus(statusStep2, 'running', 'running');
+    });
+
+    const phases = ['Encoding…', 'Step 1/2…', 'Step 2/2…', 'Extracting Δphys…'];
+    phases.forEach((t, i) => {
+      at(3400 + i * 260, () => { overlayStep2Text.textContent = t; });
+    });
+
+    at(4700, () => {
+      hide(overlayStep2);
+      videoStep2.playbackRate = STEP2_RATE;
+      videoStep2.play().catch(() => {});
+      setStatus(statusStep2, '2 steps ✓', 'done');
+      on(cardStep2, 'is-done');
+    });
+
+    // Δphys extracted — visible inside card ③
+    at(5300, () => { on(deltaCard, 'is-ready'); });
+
+    // ── inject arrow between ③ and ④ flows ───────────────────
+    at(5900, () => { on(injectArrow, 'is-flowing'); });
+
+    // ── ④ PhaseLock: Δphys applied to our model ──────────────
+    at(6300, () => {
+      on(cardOurs, 'is-active');
+      setStatus(statusFinal, 'running', 'running');
+    });
+    at(8200, () => {
       hide(overlayOurs);
       videoOurs.play().catch(() => {});
       setStatus(statusFinal, '50 + Δphys ✓', 'done');
-      on(laneOurs, 'is-done');
+      on(cardOurs, 'is-done');
+    });
+
+    // ── Comparison highlight between ② and ④ ─────────────────
+    at(9000, () => {
+      on(cardBase, 'is-compare-ref');
+      on(cardOurs, 'is-compare-ours');
+      on(compareHint, 'is-ready');
     });
   };
 
@@ -109,7 +128,6 @@
     resetBtn.addEventListener('click', () => { reset(); play(); });
   }
 
-  // Start when the demo enters the viewport
   reset();
   let started = false;
   const startOnce = () => {

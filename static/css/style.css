@@ -583,7 +583,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   .sim-phase-tag { top: 12px; right: 12px; padding: 3px 9px; font-size: 10px; }
 }
 
-/* ───── Try-PhaseLock demo (horizontal autoplay mockup) ───── */
+/* ───── Try-PhaseLock demo (2-lane autoplay mockup) ───── */
 .section-demo { padding: 48px 0 40px; }
 
 .demo-prompt-banner {
@@ -615,41 +615,97 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   font-style: italic;
 }
 
+/* Outer 2-column layout: Input | Lanes */
 .demo {
   display: grid;
-  grid-template-columns: 1fr 32px 1.1fr 48px 1.35fr;
-  gap: 0;
+  grid-template-columns: 180px 1fr;
+  gap: 14px;
   align-items: stretch;
 }
 
-.demo-stage {
+/* Input card (spans both lanes vertically) */
+.demo-input-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px 14px 12px;
+  padding: 12px;
   box-shadow: var(--shadow-sm);
-  opacity: 0.55;
-  transition: opacity 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  opacity: 0.55;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+  justify-content: center;
 }
-.demo-stage.is-active {
-  opacity: 1;
-  border-color: #bfdbfe;
-  box-shadow: var(--shadow);
-}
-.demo-stage.is-done {
-  opacity: 1;
-  border-color: #a7f3d0;
-}
+.demo-input-card.is-active { opacity: 1; border-color: #bfdbfe; }
 
 .demo-stage-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
   flex-wrap: wrap;
 }
+.demo-stage-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.demo-sub {
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Lane container: two stacked lanes */
+.demo-lanes {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
+.demo-lane {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0.55;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+}
+.demo-lane.is-active, .demo-lane.is-done { opacity: 1; }
+.demo-lane-base.is-active, .demo-lane-base.is-done { border-color: #cbd5e1; }
+.demo-lane-ours.is-active, .demo-lane-ours.is-done { border-color: #a7f3d0; }
+
+.demo-lane-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.demo-lane-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.demo-lane-title em {
+  font-style: normal;
+  color: var(--muted);
+  font-weight: 500;
+}
+.demo-lane-ours .demo-lane-title em { color: var(--ours); }
+
+.demo-lane-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Pill variants */
 .demo-pill {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9.5px;
@@ -660,15 +716,12 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   background: var(--accent-soft);
   color: var(--accent);
 }
+.demo-pill-gray { background: #f1f5f9; color: #64748b; }
 .demo-pill-lock, .demo-pill-guide {
   background: #ecfdf5;
   color: var(--ours);
 }
-.demo-stage-title {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 12.5px;
-}
+
 .demo-status {
   margin-left: auto;
   font-family: 'JetBrains Mono', monospace;
@@ -679,40 +732,67 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
 }
 .demo-status[data-state="running"] { color: var(--accent); }
 .demo-status[data-state="done"]    { color: var(--ours); }
+.demo-lane-base .demo-status[data-state="done"] { color: #64748b; }
 
-.demo-sub {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 8px;
-  text-align: center;
-  font-style: italic;
-}
-
-/* Horizontal arrow between stages */
-.demo-arrow-h {
-  align-self: center;
+/* Dashed-line connector with arrowhead + label */
+.demo-lane-connector {
+  flex: 1;
+  min-width: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: #cbd5e1;
-  font-size: 24px;
-  line-height: 1;
-  font-weight: 300;
+  padding: 0 4px;
 }
-.demo-arrow-h em {
+.demo-connector-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-image: linear-gradient(90deg, #cbd5e1 50%, transparent 50%);
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+  position: relative;
+}
+.demo-connector-line::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid #cbd5e1;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.demo-connector-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 600;
-  color: var(--ours);
+  font-size: 9.5px;
+  color: var(--muted);
   letter-spacing: 0.03em;
 }
-.demo-arrow-h em sub { font-size: 8px; }
-.demo-arrow-inject { color: var(--ours); }
 
-/* Video card with overlay */
+/* Inject-connector (animated green) — only used in PhaseLock lane */
+.demo-lane-connector-inject .demo-connector-line {
+  background-image: linear-gradient(90deg, #059669 50%, transparent 50%);
+  background-size: 10px 2px;
+}
+.demo-lane-connector-inject .demo-connector-line::after {
+  border-left-color: #059669;
+}
+.demo-lane-connector-inject .demo-connector-label {
+  color: var(--ours);
+  font-weight: 600;
+}
+.demo-lane-connector-inject.is-flowing .demo-connector-line {
+  animation: demoFlowDash 0.7s linear infinite;
+}
+@keyframes demoFlowDash {
+  to { background-position: 10px 0; }
+}
+
+/* Video cards */
 .demo-video-card {
   position: relative;
   border-radius: 8px;
@@ -720,7 +800,12 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   background: #0f172a;
   aspect-ratio: 16/9;
   box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
 }
+.demo-input-card .demo-video-card { width: 100%; }
+.demo-lane .demo-video-card { width: 200px; }
+.demo-video-sm { width: 130px !important; }
+
 .demo-video-card video {
   width: 100%;
   height: 100%;
@@ -735,7 +820,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   color: #e2e8f0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -743,14 +828,14 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
 .demo-video-overlay.is-hidden { opacity: 0; }
 .demo-overlay-text {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   text-align: center;
-  padding: 0 8px;
+  padding: 0 6px;
 }
 .demo-spinner {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border: 2.5px solid rgba(255,255,255,0.18);
   border-top-color: #60a5fa;
   border-radius: 50%;
@@ -760,41 +845,55 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
 
 .demo-video-label {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  padding: 2px 7px;
+  top: 5px;
+  left: 5px;
+  padding: 2px 6px;
   background: rgba(15, 23, 42, 0.7);
   color: white;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 600;
   backdrop-filter: blur(6px);
 }
 .demo-video-label code {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 9px;
   background: none;
   padding: 0;
 }
 .demo-label-base { background: rgba(17, 24, 39, 0.78); }
 .demo-label-ours { background: rgba(5, 150, 105, 0.88); }
 
-/* Δ_phys chip under Stage 2 video */
-.demo-delta-inline {
+/* Step-2 sub-card (video + caption) */
+.demo-step2-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding: 5px 11px;
+  gap: 3px;
+}
+.demo-step2-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Δphys chip */
+.demo-delta-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
   background: #ecfdf5;
   border: 1px solid #a7f3d0;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--ours);
   opacity: 0;
   transform: scale(0.92);
   transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
 }
 .demo-delta-inline.is-ready {
   opacity: 1;
@@ -809,15 +908,8 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
 }
-.demo-delta-icon sub { font-size: 9px; }
+.demo-delta-icon sub { font-size: 8px; }
 .demo-delta-text { font-weight: 500; }
-
-/* Stage 3: two videos stacked vertically */
-.demo-compare-v {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 6px;
-}
 
 /* Caption + replay below pipeline */
 .demo-caption {
@@ -833,9 +925,12 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   margin: 0;
   font-size: 12.5px;
   color: #4b5563;
-  line-height: 1.55;
+  line-height: 1.6;
   flex: 1;
 }
+.demo-caption strong { color: var(--text); font-weight: 600; }
+.demo-caption em { font-style: normal; color: var(--accent); font-weight: 500; }
+.demo-caption sub { font-size: 9.5px; }
 .demo-reset {
   font-size: 11.5px;
   padding: 6px 12px;
@@ -843,19 +938,16 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
   flex-shrink: 0;
 }
 
-@media (max-width: 900px) {
-  .demo {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .demo-arrow-h {
-    transform: rotate(90deg);
-    padding: 2px 0;
-  }
-  .demo-caption { flex-direction: column; align-items: flex-start; }
+@media (max-width: 960px) {
+  .demo { grid-template-columns: 1fr; }
+  .demo-lane-body { flex-wrap: wrap; justify-content: center; }
+  .demo-lane-connector { min-width: 60px; }
 }
 @media (max-width: 600px) {
   .demo-prompt-text { font-size: 12px; }
+  .demo-lane .demo-video-card { width: 100%; max-width: 240px; }
+  .demo-video-sm { width: 100% !important; max-width: 160px; }
+  .demo-caption { flex-direction: column; align-items: flex-start; }
 }
 
 /* ───── Tabs ───── */

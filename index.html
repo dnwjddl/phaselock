@@ -84,79 +84,98 @@
 
     <div class="demo" id="demo">
 
-      <!-- ── Stage 1: Input ── -->
-      <div class="demo-stage" data-stage="input">
+      <!-- Input card (shared across both lanes) -->
+      <div class="demo-input-card" data-stage="input">
         <div class="demo-stage-head">
-          <span class="demo-pill">Stage 1</span>
-          <span class="demo-stage-title">Input</span>
+          <span class="demo-pill">Input</span>
+          <span class="demo-stage-title">image + text</span>
         </div>
         <div class="demo-video-card">
           <video src="videos/demo/ours.mp4" muted playsinline preload="metadata"></video>
-          <div class="demo-video-label">image + text</div>
+          <div class="demo-video-label">first frame</div>
         </div>
-        <div class="demo-sub">first frame of target scene</div>
+        <div class="demo-sub">shared across both paths</div>
       </div>
 
-      <div class="demo-arrow-h"><span>→</span></div>
+      <div class="demo-lanes">
 
-      <!-- ── Stage 2: Step 2 result + Δ_phys ── -->
-      <div class="demo-stage" data-stage="step2">
-        <div class="demo-stage-head">
-          <span class="demo-pill demo-pill-lock">Stage 2</span>
-          <span class="demo-stage-title">2-step inference</span>
-          <span class="demo-status" id="status-step2">waiting</span>
-        </div>
-        <div class="demo-video-card">
-          <video id="video-step2" src="videos/demo/step2.mp4" muted loop playsinline preload="metadata"></video>
-          <div class="demo-video-overlay" id="overlay-step2">
-            <div class="demo-spinner"></div>
-            <div class="demo-overlay-text" id="overlay-step2-text">Encoding input…</div>
+        <!-- ══ Baseline lane — comparison reference only ══ -->
+        <div class="demo-lane demo-lane-base" data-stage="baseline">
+          <div class="demo-lane-head">
+            <span class="demo-pill demo-pill-gray">Baseline</span>
+            <span class="demo-lane-title">50 steps · <em>no guidance</em></span>
+            <span class="demo-status" id="status-base">waiting</span>
           </div>
-          <div class="demo-video-label"><code>t = 2</code></div>
-        </div>
-        <div class="demo-delta-inline" id="delta-card">
-          <span class="demo-delta-icon">Δ<sub>phys</sub></span>
-          <span class="demo-delta-text">motion prior locked</span>
-        </div>
-      </div>
-
-      <div class="demo-arrow-h demo-arrow-inject">
-        <span>→</span>
-        <em>+ Δ<sub>phys</sub></em>
-      </div>
-
-      <!-- ── Stage 3: Final (two videos stacked) ── -->
-      <div class="demo-stage" data-stage="final">
-        <div class="demo-stage-head">
-          <span class="demo-pill demo-pill-guide">Stage 3</span>
-          <span class="demo-stage-title">50-step output</span>
-          <span class="demo-status" id="status-final">waiting</span>
-        </div>
-        <div class="demo-compare-v">
-          <div class="demo-video-card">
-            <video id="video-base" src="videos/demo/step50.mp4" muted loop playsinline preload="metadata"></video>
-            <div class="demo-video-overlay" id="overlay-base">
-              <div class="demo-spinner"></div>
-              <div class="demo-overlay-text">no guidance</div>
+          <div class="demo-lane-body">
+            <div class="demo-lane-connector">
+              <span class="demo-connector-line"></span>
+              <span class="demo-connector-label">50-step direct</span>
             </div>
-            <div class="demo-video-label demo-label-base">Baseline</div>
-          </div>
-          <div class="demo-video-card">
-            <video id="video-ours" src="videos/demo/ours.mp4" muted loop playsinline preload="metadata"></video>
-            <div class="demo-video-overlay" id="overlay-ours">
-              <div class="demo-spinner"></div>
-              <div class="demo-overlay-text">+ Δphys</div>
+            <div class="demo-video-card">
+              <video id="video-base" src="videos/demo/step50.mp4" muted loop playsinline preload="metadata"></video>
+              <div class="demo-video-overlay" id="overlay-base">
+                <div class="demo-spinner"></div>
+                <div class="demo-overlay-text">running 50 steps…</div>
+              </div>
+              <div class="demo-video-label demo-label-base">Baseline output</div>
             </div>
-            <div class="demo-video-label demo-label-ours">+ PhaseLock</div>
           </div>
         </div>
+
+        <!-- ══ PhaseLock lane — the actual method ══ -->
+        <div class="demo-lane demo-lane-ours">
+          <div class="demo-lane-head">
+            <span class="demo-pill demo-pill-lock">PhaseLock</span>
+            <span class="demo-lane-title">2-step prior &rarr; 50 steps <em>+ Δ<sub>phys</sub></em></span>
+            <span class="demo-status" id="status-final">waiting</span>
+          </div>
+          <div class="demo-lane-body">
+
+            <!-- Step 2 sub-card -->
+            <div class="demo-step2-card" data-stage="step2">
+              <div class="demo-video-card demo-video-sm">
+                <video id="video-step2" src="videos/demo/step2.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="demo-video-overlay" id="overlay-step2">
+                  <div class="demo-spinner"></div>
+                  <div class="demo-overlay-text" id="overlay-step2-text">Encoding…</div>
+                </div>
+                <div class="demo-video-label"><code>t=2</code></div>
+              </div>
+              <div class="demo-step2-caption">2-step inference</div>
+            </div>
+
+            <!-- Δphys chip (produced by step 2) -->
+            <div class="demo-delta-inline" id="delta-card">
+              <span class="demo-delta-icon">Δ<sub>phys</sub></span>
+              <span class="demo-delta-text">motion prior</span>
+            </div>
+
+            <!-- Guidance injection arrow -->
+            <div class="demo-lane-connector demo-lane-connector-inject" id="inject-connector">
+              <span class="demo-connector-line"></span>
+              <span class="demo-connector-label">guidance injected</span>
+            </div>
+
+            <!-- PhaseLock output -->
+            <div class="demo-video-card">
+              <video id="video-ours" src="videos/demo/ours.mp4" muted loop playsinline preload="metadata"></video>
+              <div class="demo-video-overlay" id="overlay-ours">
+                <div class="demo-spinner"></div>
+                <div class="demo-overlay-text">running 50 + guidance…</div>
+              </div>
+              <div class="demo-video-label demo-label-ours">+ PhaseLock</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <div class="demo-caption">
       <p>
-        Baseline's 50-step path hallucinates — the ball and block freeze or drift unnaturally.
-        PhaseLock keeps the physically-grounded motion from Stage 2 while reaching full visual fidelity.
+        The two lanes run <strong>in parallel from the same input</strong>.
+        <strong>Baseline (top)</strong> is a plain 50-step denoising — shown only for reference and receives <em>no</em> guidance.
+        <strong>PhaseLock (bottom)</strong> uses a short 2-step run to extract the motion prior Δ<sub>phys</sub>, which is injected as guidance <em>only</em> into its own 50-step path.
       </p>
       <button class="demo-reset btn-secondary" id="demo-reset" type="button">↻ Replay</button>
     </div>

@@ -2,9 +2,10 @@
   const demo = document.getElementById('demo');
   if (!demo) return;
 
-  const stageInput = demo.querySelector('[data-stage="input"]');
-  const stageStep2 = demo.querySelector('[data-stage="step2"]');
-  const stageFinal = demo.querySelector('[data-stage="final"]');
+  const inputCard = demo.querySelector('[data-stage="input"]');
+  const laneBase  = demo.querySelector('[data-stage="baseline"]');
+  const laneOurs  = demo.querySelector('.demo-lane-ours');
+  const step2Card = demo.querySelector('[data-stage="step2"]');
 
   const videoStep2 = document.getElementById('video-step2');
   const videoBase  = document.getElementById('video-base');
@@ -15,10 +16,11 @@
   const overlayBase  = document.getElementById('overlay-base');
   const overlayOurs  = document.getElementById('overlay-ours');
 
-  const statusStep2 = document.getElementById('status-step2');
+  const statusBase  = document.getElementById('status-base');
   const statusFinal = document.getElementById('status-final');
 
   const deltaCard = document.getElementById('delta-card');
+  const injectConnector = document.getElementById('inject-connector');
   const resetBtn  = document.getElementById('demo-reset');
 
   const STEP2_RATE = 2.5;
@@ -30,8 +32,8 @@
   };
   const hide = el => el.classList.add('is-hidden');
   const show = el => el.classList.remove('is-hidden');
-  const setActive = (stage, on) => stage.classList.toggle('is-active', on);
-  const setDone   = (stage, on) => stage.classList.toggle('is-done', on);
+  const on  = (el, cls) => el.classList.add(cls);
+  const off = (el, cls) => el.classList.remove(cls);
 
   const timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
@@ -43,59 +45,63 @@
       try { v.pause(); v.currentTime = 0; } catch (_) {}
     });
     [overlayStep2, overlayBase, overlayOurs].forEach(show);
-    overlayStep2Text.textContent = 'Encoding input…';
-    deltaCard.classList.remove('is-ready');
+    overlayStep2Text.textContent = 'Encoding…';
 
-    setActive(stageInput, true);
-    setActive(stageStep2, false);
-    setActive(stageFinal, false);
-    setDone(stageStep2, false);
-    setDone(stageFinal, false);
-    setStatus(statusStep2, 'waiting', null);
+    off(deltaCard, 'is-ready');
+    off(injectConnector, 'is-flowing');
+
+    on(inputCard, 'is-active');
+    [laneBase, laneOurs].forEach(el => {
+      off(el, 'is-active');
+      off(el, 'is-done');
+    });
+
+    setStatus(statusBase, 'waiting', null);
     setStatus(statusFinal, 'waiting', null);
   };
 
   const play = () => {
-    // t=600ms: step 2 begins loading
-    at(600, () => {
-      setActive(stageStep2, true);
-      setStatus(statusStep2, 'running', 'running');
+    // t=500ms: BOTH lanes activate in parallel (same input feeds both)
+    at(500, () => {
+      on(laneBase, 'is-active');
+      on(laneOurs, 'is-active');
+      setStatus(statusBase, 'running', 'running');
+      setStatus(statusFinal, 'running', 'running');
     });
 
-    // rolling overlay text
-    const phases = ['Encoding input…', 'Denoising 1/2…', 'Denoising 2/2…', 'Extracting Δphys…'];
+    // Step 2 overlay phases (bottom lane only)
+    const phases = ['Encoding…', 'Step 1/2…', 'Step 2/2…', 'Extracting Δphys…'];
     phases.forEach((t, i) => {
-      at(600 + i * 350, () => { overlayStep2Text.textContent = t; });
+      at(500 + i * 320, () => { overlayStep2Text.textContent = t; });
     });
 
-    // t=2000ms: step2 video plays fast
-    at(2000, () => {
+    // t=1800ms: Step 2 finishes — its video plays fast
+    at(1800, () => {
       hide(overlayStep2);
       videoStep2.playbackRate = STEP2_RATE;
       videoStep2.play().catch(() => {});
     });
 
-    // t=2600ms: Δphys appears
-    at(2600, () => {
-      deltaCard.classList.add('is-ready');
-      setStatus(statusStep2, 'step 2 ✓', 'done');
-      setDone(stageStep2, true);
-    });
+    // t=2400ms: Δphys chip emerges
+    at(2400, () => { on(deltaCard, 'is-ready'); });
 
-    // t=3600ms: final stage starts loading
-    at(3600, () => {
-      setActive(stageFinal, true);
-      setStatus(statusFinal, 'running', 'running');
-    });
+    // t=3000ms: Δphys flows into the PhaseLock 50-step path
+    at(3000, () => { on(injectConnector, 'is-flowing'); });
 
-    // t=5000ms: baseline + ours play (natural speed)
-    at(5000, () => {
+    // t=5200ms: baseline output becomes ready (unguided 50-step)
+    at(5200, () => {
       hide(overlayBase);
-      hide(overlayOurs);
       videoBase.play().catch(() => {});
+      setStatus(statusBase, '50 steps ✓', 'done');
+      on(laneBase, 'is-done');
+    });
+
+    // t=5600ms: PhaseLock output becomes ready (guided 50-step)
+    at(5600, () => {
+      hide(overlayOurs);
       videoOurs.play().catch(() => {});
-      setStatus(statusFinal, '50 steps ✓', 'done');
-      setDone(stageFinal, true);
+      setStatus(statusFinal, '50 + Δphys ✓', 'done');
+      on(laneOurs, 'is-done');
     });
   };
 
@@ -103,7 +109,7 @@
     resetBtn.addEventListener('click', () => { reset(); play(); });
   }
 
-  // Start when the demo enters the viewport (or immediately if already visible)
+  // Start when the demo enters the viewport
   reset();
   let started = false;
   const startOnce = () => {
@@ -111,7 +117,6 @@
     started = true;
     at(400, play);
   };
-
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {

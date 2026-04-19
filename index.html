@@ -67,6 +67,102 @@
   </div>
 </header>
 
+<!-- ═══════════════════ TRY PHASELOCK (AUTOPLAY MOCKUP) ═══════════════════ -->
+<section class="section section-demo" id="try">
+  <div class="container">
+    <h2>How PhaseLock Works</h2>
+    <p class="section-intro">
+      A single walkthrough of the two-stage pipeline.
+      We run 2 denoising steps to extract a motion prior Δ<sub>phys</sub>,
+      then re-inject it as <em>Latent Δ Guidance</em> during the full 50-step run.
+    </p>
+
+    <div class="demo-prompt-banner">
+      <span class="demo-prompt-badge">PROMPT</span>
+      <span class="demo-prompt-text">Two pillows on a table and two grabber tools hanging above them from which a brown tennis ball and an orange block are suspended. The grabber tools let go of the ball and block.</span>
+    </div>
+
+    <div class="demo" id="demo">
+
+      <!-- ── Stage 1: Input ── -->
+      <div class="demo-stage" data-stage="input">
+        <div class="demo-stage-head">
+          <span class="demo-pill">Stage 1</span>
+          <span class="demo-stage-title">Input</span>
+        </div>
+        <div class="demo-video-card">
+          <video src="videos/demo/ours.mp4" muted playsinline preload="metadata"></video>
+          <div class="demo-video-label">image + text</div>
+        </div>
+        <div class="demo-sub">first frame of target scene</div>
+      </div>
+
+      <div class="demo-arrow-h"><span>→</span></div>
+
+      <!-- ── Stage 2: Step 2 result + Δ_phys ── -->
+      <div class="demo-stage" data-stage="step2">
+        <div class="demo-stage-head">
+          <span class="demo-pill demo-pill-lock">Stage 2</span>
+          <span class="demo-stage-title">2-step inference</span>
+          <span class="demo-status" id="status-step2">waiting</span>
+        </div>
+        <div class="demo-video-card">
+          <video id="video-step2" src="videos/demo/step2.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="demo-video-overlay" id="overlay-step2">
+            <div class="demo-spinner"></div>
+            <div class="demo-overlay-text" id="overlay-step2-text">Encoding input…</div>
+          </div>
+          <div class="demo-video-label"><code>t = 2</code></div>
+        </div>
+        <div class="demo-delta-inline" id="delta-card">
+          <span class="demo-delta-icon">Δ<sub>phys</sub></span>
+          <span class="demo-delta-text">motion prior locked</span>
+        </div>
+      </div>
+
+      <div class="demo-arrow-h demo-arrow-inject">
+        <span>→</span>
+        <em>+ Δ<sub>phys</sub></em>
+      </div>
+
+      <!-- ── Stage 3: Final (two videos stacked) ── -->
+      <div class="demo-stage" data-stage="final">
+        <div class="demo-stage-head">
+          <span class="demo-pill demo-pill-guide">Stage 3</span>
+          <span class="demo-stage-title">50-step output</span>
+          <span class="demo-status" id="status-final">waiting</span>
+        </div>
+        <div class="demo-compare-v">
+          <div class="demo-video-card">
+            <video id="video-base" src="videos/demo/step50.mp4" muted loop playsinline preload="metadata"></video>
+            <div class="demo-video-overlay" id="overlay-base">
+              <div class="demo-spinner"></div>
+              <div class="demo-overlay-text">no guidance</div>
+            </div>
+            <div class="demo-video-label demo-label-base">Baseline</div>
+          </div>
+          <div class="demo-video-card">
+            <video id="video-ours" src="videos/demo/ours.mp4" muted loop playsinline preload="metadata"></video>
+            <div class="demo-video-overlay" id="overlay-ours">
+              <div class="demo-spinner"></div>
+              <div class="demo-overlay-text">+ Δphys</div>
+            </div>
+            <div class="demo-video-label demo-label-ours">+ PhaseLock</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-caption">
+      <p>
+        Baseline's 50-step path hallucinates — the ball and block freeze or drift unnaturally.
+        PhaseLock keeps the physically-grounded motion from Stage 2 while reaching full visual fidelity.
+      </p>
+      <button class="demo-reset btn-secondary" id="demo-reset" type="button">↻ Replay</button>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════ TEASER VIDEO ═══════════════════ -->
 <section class="teaser">
   <div class="container">
@@ -318,153 +414,6 @@
 
       <div class="sim-footer">
         <span class="sim-note">Illustrative trend — phase drops ~18% on baseline, stays locked on PhaseLock.</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ TRY PHASELOCK (MOCKUP) ═══════════════════ -->
-<section class="section" id="try">
-  <div class="container narrow">
-    <h2>Try PhaseLock</h2>
-    <p class="section-intro">
-      A walkthrough of the two-stage pipeline on a real example.
-      Stage 1 runs a 2-step inference to extract the motion prior.
-      Stage 2 re-injects it as <em>Latent Δ Guidance</em> during the full 50-step denoising.
-    </p>
-
-    <div class="demo" id="demo">
-
-      <!-- ── Stage 1: Input ── -->
-      <div class="demo-stage is-active" data-stage="input">
-        <div class="demo-stage-head">
-          <span class="demo-pill">Stage 1</span>
-          <span class="demo-stage-title">Input</span>
-        </div>
-
-        <div class="demo-input-body">
-          <div class="demo-img-drop" id="demo-img">
-            <video src="videos/demo/ours.mp4" muted playsinline preload="metadata" class="demo-img-preview"></video>
-            <div class="demo-img-hint">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <rect x="3" y="4" width="18" height="16" rx="2"/>
-                <circle cx="9" cy="10" r="2"/>
-                <path d="M3 17l6-6 4 4 3-3 5 5"/>
-              </svg>
-              <span>input image <em>(sample loaded)</em></span>
-            </div>
-          </div>
-
-          <label class="demo-prompt">
-            <span class="demo-prompt-label">Text prompt</span>
-            <input id="demo-text" type="text"
-                   value="A potato is dropped into a glass of water, causing a splash."
-                   readonly>
-          </label>
-
-          <button class="demo-run" id="demo-run" type="button">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            Run · 2-step inference
-          </button>
-        </div>
-      </div>
-
-      <!-- connector -->
-      <div class="demo-flow"><span class="demo-flow-dot"></span><span class="demo-flow-dot"></span><span class="demo-flow-dot"></span></div>
-
-      <!-- ── Stage 2: Step 2 result ── -->
-      <div class="demo-stage" data-stage="step2">
-        <div class="demo-stage-head">
-          <span class="demo-pill demo-pill-lock">Stage 2</span>
-          <span class="demo-stage-title">Few-step trajectory · motion prior extracted</span>
-          <span class="demo-status" id="status-step2">waiting</span>
-        </div>
-
-        <div class="demo-step2-grid">
-          <div class="demo-video-card">
-            <video id="video-step2" src="videos/demo/step2.mp4" muted loop playsinline preload="metadata"></video>
-            <div class="demo-video-overlay" id="overlay-step2">
-              <div class="demo-spinner"></div>
-              <div class="demo-overlay-text" id="overlay-step2-text">Running 2-step inference…</div>
-            </div>
-            <div class="demo-video-label"><code>t = 2</code> · coarse latent</div>
-          </div>
-
-          <div class="demo-delta-card" id="delta-card">
-            <div class="demo-delta-head">Δ<sub>phys</sub></div>
-            <div class="demo-delta-viz">
-              <svg viewBox="0 0 120 80" width="100%" height="60">
-                <defs>
-                  <marker id="d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                    <path d="M0,0 L10,5 L0,10 z" fill="#059669"/>
-                  </marker>
-                </defs>
-                <path d="M 12 62 C 36 20, 64 56, 108 18" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="3,4" marker-end="url(#d-arrow)"/>
-                <circle cx="12" cy="62" r="3.5" fill="#059669"/>
-                <circle cx="40" cy="40" r="2.5" fill="#34d399"/>
-                <circle cx="72" cy="44" r="2.5" fill="#34d399"/>
-                <circle cx="108" cy="18" r="3.5" fill="#059669"/>
-              </svg>
-            </div>
-            <div class="demo-delta-caption">motion prior <br>(frame-to-frame latent delta)</div>
-          </div>
-        </div>
-
-        <div class="demo-explain">
-          The 2-step trajectory already captures physically valid motion (water rising, potato sinking) but lacks fine texture.
-          We lock its frame-to-frame delta Δ<sub>phys</sub> as the <em>motion prior</em> and feed it back into a full 50-step run as guidance.
-        </div>
-
-        <button class="demo-run demo-run-alt" id="demo-apply" type="button" disabled>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 12l8 8 8-8-1.5-1.5L13 15.5V4h-2v11.5L5.5 10.5z"/></svg>
-          Apply Δ<sub>phys</sub> as guidance · Run 50-step
-        </button>
-      </div>
-
-      <!-- connector -->
-      <div class="demo-flow"><span class="demo-flow-dot"></span><span class="demo-flow-dot"></span><span class="demo-flow-dot"></span></div>
-
-      <!-- ── Stage 3: Final comparison ── -->
-      <div class="demo-stage" data-stage="final">
-        <div class="demo-stage-head">
-          <span class="demo-pill demo-pill-guide">Stage 3</span>
-          <span class="demo-stage-title">50-step output · Baseline vs PhaseLock</span>
-          <span class="demo-status" id="status-final">waiting</span>
-        </div>
-
-        <div class="demo-reinject" id="demo-reinject">
-          <span class="demo-chip">image</span><span class="demo-chip-plus">+</span>
-          <span class="demo-chip">text</span><span class="demo-chip-plus">+</span>
-          <span class="demo-chip demo-chip-ours">Δ<sub>phys</sub></span>
-          <span class="demo-arrow">→</span>
-          <span class="demo-chip-out">50-step denoising</span>
-        </div>
-
-        <div class="demo-compare">
-          <div class="demo-video-card">
-            <video id="video-base" src="videos/demo/step50.mp4" muted loop playsinline preload="metadata"></video>
-            <div class="demo-video-overlay" id="overlay-base">
-              <div class="demo-spinner"></div>
-              <div class="demo-overlay-text">50-step · no guidance</div>
-            </div>
-            <div class="demo-video-label demo-label-base">Baseline (50 steps)</div>
-          </div>
-          <div class="demo-video-card">
-            <video id="video-ours" src="videos/demo/ours.mp4" muted loop playsinline preload="metadata"></video>
-            <div class="demo-video-overlay" id="overlay-ours">
-              <div class="demo-spinner"></div>
-              <div class="demo-overlay-text">50-step · + Δ<sub>phys</sub></div>
-            </div>
-            <div class="demo-video-label demo-label-ours">+ PhaseLock</div>
-          </div>
-        </div>
-
-        <div class="demo-explain demo-explain-result">
-          The baseline's 50-step path has drifted — motion is frozen despite sharp texture (phase eroded).
-          PhaseLock keeps the Stage-1 splash dynamics locked in while still reaching full visual fidelity.
-        </div>
-
-        <button class="demo-reset btn-secondary" id="demo-reset" type="button">↻ Reset demo</button>
       </div>
     </div>
   </div>

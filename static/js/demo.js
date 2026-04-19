@@ -2,10 +2,6 @@
   const demo = document.getElementById('demo');
   if (!demo) return;
 
-  const runBtn   = document.getElementById('demo-run');
-  const applyBtn = document.getElementById('demo-apply');
-  const resetBtn = document.getElementById('demo-reset');
-
   const stageInput = demo.querySelector('[data-stage="input"]');
   const stageStep2 = demo.querySelector('[data-stage="step2"]');
   const stageFinal = demo.querySelector('[data-stage="final"]');
@@ -23,92 +19,107 @@
   const statusFinal = document.getElementById('status-final');
 
   const deltaCard = document.getElementById('delta-card');
-  const reinject  = document.getElementById('demo-reinject');
+  const resetBtn  = document.getElementById('demo-reset');
+
+  const STEP2_RATE = 2.5;
 
   const setStatus = (el, text, state) => {
     el.textContent = text;
-    if (state) el.setAttribute('data-state', state); else el.removeAttribute('data-state');
+    if (state) el.setAttribute('data-state', state);
+    else el.removeAttribute('data-state');
   };
-
   const hide = el => el.classList.add('is-hidden');
   const show = el => el.classList.remove('is-hidden');
+  const setActive = (stage, on) => stage.classList.toggle('is-active', on);
+  const setDone   = (stage, on) => stage.classList.toggle('is-done', on);
 
-  const playSafely = v => { v.currentTime = 0; v.play().catch(() => {}); };
+  const timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const clearAll = () => { timers.forEach(clearTimeout); timers.length = 0; };
 
-  const setStageActive = (stage, active) => {
-    stage.classList.toggle('is-active', active);
-  };
-
-  const resetAll = () => {
-    [videoStep2, videoBase, videoOurs].forEach(v => { v.pause(); v.currentTime = 0; });
+  const reset = () => {
+    clearAll();
+    [videoStep2, videoBase, videoOurs].forEach(v => {
+      try { v.pause(); v.currentTime = 0; } catch (_) {}
+    });
     [overlayStep2, overlayBase, overlayOurs].forEach(show);
-    overlayStep2Text.textContent = 'Running 2-step inference…';
-
+    overlayStep2Text.textContent = 'Encoding input…';
     deltaCard.classList.remove('is-ready');
-    reinject.classList.remove('is-ready');
 
-    setStageActive(stageInput, true);
-    setStageActive(stageStep2, false);
-    setStageActive(stageFinal, false);
-    stageStep2.classList.remove('is-done');
-    stageFinal.classList.remove('is-done');
-
+    setActive(stageInput, true);
+    setActive(stageStep2, false);
+    setActive(stageFinal, false);
+    setDone(stageStep2, false);
+    setDone(stageFinal, false);
     setStatus(statusStep2, 'waiting', null);
     setStatus(statusFinal, 'waiting', null);
-
-    runBtn.disabled = false;
-    applyBtn.disabled = true;
   };
 
-  const runStep2 = () => {
-    runBtn.disabled = true;
-    setStageActive(stageStep2, true);
-    setStatus(statusStep2, 'running', 'running');
+  const play = () => {
+    // t=600ms: step 2 begins loading
+    at(600, () => {
+      setActive(stageStep2, true);
+      setStatus(statusStep2, 'running', 'running');
+    });
 
-    // fake "progress" text
-    const phases = ['Encoding input…', 'Denoising step 1/2…', 'Denoising step 2/2…', 'Extracting Δphys…'];
-    let idx = 0;
-    overlayStep2Text.textContent = phases[idx];
-    const tick = setInterval(() => {
-      idx = Math.min(idx + 1, phases.length - 1);
-      overlayStep2Text.textContent = phases[idx];
-    }, 450);
+    // rolling overlay text
+    const phases = ['Encoding input…', 'Denoising 1/2…', 'Denoising 2/2…', 'Extracting Δphys…'];
+    phases.forEach((t, i) => {
+      at(600 + i * 350, () => { overlayStep2Text.textContent = t; });
+    });
 
-    setTimeout(() => {
-      clearInterval(tick);
+    // t=2000ms: step2 video plays fast
+    at(2000, () => {
       hide(overlayStep2);
-      playSafely(videoStep2);
+      videoStep2.playbackRate = STEP2_RATE;
+      videoStep2.play().catch(() => {});
+    });
+
+    // t=2600ms: Δphys appears
+    at(2600, () => {
       deltaCard.classList.add('is-ready');
       setStatus(statusStep2, 'step 2 ✓', 'done');
-      stageStep2.classList.add('is-done');
-      applyBtn.disabled = false;
+      setDone(stageStep2, true);
+    });
 
-      // scroll hint
-      stageStep2.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 2000);
-  };
+    // t=3600ms: final stage starts loading
+    at(3600, () => {
+      setActive(stageFinal, true);
+      setStatus(statusFinal, 'running', 'running');
+    });
 
-  const runFinal = () => {
-    applyBtn.disabled = true;
-    setStageActive(stageFinal, true);
-    setStatus(statusFinal, 'running', 'running');
-    reinject.classList.add('is-ready');
-
-    setTimeout(() => {
+    // t=5000ms: baseline + ours play (natural speed)
+    at(5000, () => {
       hide(overlayBase);
       hide(overlayOurs);
-      playSafely(videoBase);
-      playSafely(videoOurs);
+      videoBase.play().catch(() => {});
+      videoOurs.play().catch(() => {});
       setStatus(statusFinal, '50 steps ✓', 'done');
-      stageFinal.classList.add('is-done');
-      stageFinal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 2600);
+      setDone(stageFinal, true);
+    });
   };
 
-  runBtn.addEventListener('click', runStep2);
-  applyBtn.addEventListener('click', runFinal);
-  resetBtn.addEventListener('click', resetAll);
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => { reset(); play(); });
+  }
 
-  // initialize
-  resetAll();
+  // Start when the demo enters the viewport (or immediately if already visible)
+  reset();
+  let started = false;
+  const startOnce = () => {
+    if (started) return;
+    started = true;
+    at(400, play);
+  };
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { startOnce(); io.disconnect(); }
+      });
+    }, { threshold: 0.3 });
+    io.observe(demo);
+  } else {
+    startOnce();
+  }
 })();

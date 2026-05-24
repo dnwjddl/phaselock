@@ -1,6 +1,6 @@
 # PhaseLock — Project Page
 
-Research project page for *Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them*.
+Research project page for *Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them* (ICML 2026).
 
 ## Local preview
 

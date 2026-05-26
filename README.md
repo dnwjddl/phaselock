@@ -1,55 +1,111 @@
-# PhaseLock — Project Page
+# PhaseLock
 
-Research project page for *Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them* (ICML 2026).
+Official code and project page for **Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them**.
 
-## Local preview
+PhaseLock is a training-free inference method for video diffusion models. It first runs a few-step generation to extract a motion prior, then uses latent delta guidance during full denoising to preserve that motion while visual details are refined.
 
-Browsers block `fetch('data/videos.json')` when opening `index.html` via `file://`. Serve the folder over HTTP:
+## Repository Layout
+
+```text
+phaselock/              # Python package
+configs/                # Default inference configuration
+examples/               # Minimal usage examples
+scripts/                # Command-line inference and evaluation scripts
+index.html              # GitHub Pages project page
+static/, data/, videos/ # Project page assets
+```
+
+Generated videos and local experiment outputs are intentionally ignored by Git. Keep outputs under `output/` or `test_outputs/`.
+
+## Installation
 
 ```bash
-cd project_page
+git clone https://github.com/dnwjddl/phaselock.git
+cd phaselock
+pip install -e .
+```
+
+For the package dependencies only:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Quick Start
+
+Image-to-video generation with PhaseLock:
+
+```bash
+python scripts/inference.py \
+  --prompt "A red ball rolling down a wooden ramp and bouncing on the floor" \
+  --image path/to/image.jpg \
+  --output output/ball_rolling.mp4
+```
+
+Text-to-video generation:
+
+```bash
+python scripts/inference.py \
+  --mode t2v \
+  --prompt "A pendulum swinging back and forth" \
+  --output output/pendulum.mp4
+```
+
+Run the baseline without PhaseLock:
+
+```bash
+python scripts/inference.py \
+  --prompt "A red ball rolling down a wooden ramp and bouncing on the floor" \
+  --image path/to/image.jpg \
+  --output output/baseline.mp4 \
+  --no_phaselock
+```
+
+## Python API
+
+```python
+from diffusers import CogVideoXImageToVideoPipeline
+from diffusers.utils import export_to_video, load_image
+
+from phaselock import PhaseLockPipeline
+
+pipe = PhaseLockPipeline.from_pretrained(
+    "THUDM/CogVideoX-5B-I2V",
+    CogVideoXImageToVideoPipeline,
+    few_steps=2,
+    full_steps=50,
+    guidance_strength=0.05,
+)
+
+image = load_image("path/to/image.jpg")
+frames = pipe(
+    prompt="A red ball rolling down a wooden ramp and bouncing on the floor",
+    image=image,
+    num_frames=49,
+    guidance_scale=6.0,
+    seed=42,
+)
+
+export_to_video(frames, "output/ball_rolling.mp4", fps=8)
+```
+
+## Project Page
+
+This repository also serves the project page at:
+
+```text
+https://dnwjddl.github.io/phaselock/
+```
+
+To preview it locally, serve the repository root over HTTP. Opening `index.html` directly through `file://` can block `fetch('data/videos.json')`.
+
+```bash
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-## Deploying to `phaselock.github.io`
+Remote gallery pairs stream from `https://phaselock-physical-video.github.io/samples/...` so the repository stays lightweight while the full gallery remains available from the page.
 
-1. Create a new GitHub organization named **`phaselock`** (github.com → Settings → New organization, free plan).
-2. In that org, create a repo named **`phaselock.github.io`** (exact match — this makes it the org root site).
-3. Push this folder to the repo:
+## Citation
 
-   ```bash
-   cd project_page
-   git init -b main
-   git add .
-   git commit -m "Initial project page"
-   git remote add origin https://github.com/phaselock/phaselock.github.io.git
-   git push -u origin main
-   ```
-
-4. In the repo, go to **Settings → Pages** and confirm the source is `main` branch, `/` root. The site is live at <https://phaselock.github.io/> within ~1 minute.
-
-## Things to fill in later
-
-- Replace the 6 `<a href="#" class="author">` links in `index.html` with each author's homepage / Google Scholar URL.
-- Replace the four **Coming soon** buttons in the hero (Paper / arXiv / Code / Gallery) once links are public.
-- Swap in more highlight pairs: download the mp4s to `videos/highlights/{phygenbench,physics-iq}/` and flip the entry in `data/videos.json` to use the local path (see `HIGHLIGHT_LOCAL` mapping in the generator).
-- Expand the **Method** section — currently a placeholder.
-- (Optional) Add a **Results** section with Physics-IQ / PhyGenBench tables and the per-scenario analysis from Appendix G.1.
-
-## Structure
-
-```
-project_page/
-├── index.html
-├── static/
-│   ├── css/style.css
-│   └── js/gallery.js
-├── data/videos.json          # benchmark → { highlights[], remote[] }
-└── videos/
-    └── highlights/
-        ├── phygenbench/      # 4 pairs (8 mp4s) — bundled
-        └── physics-iq/       # 4 pairs (8 mp4s) — bundled
-```
-
-Remote pairs stream from `https://phaselock-physical-video.github.io/samples/...` (CORS-enabled), so the repo stays lightweight (~8 MB) while the full gallery is still reachable via the **Load remaining pairs** button.
+Citation information will be added here when the paper metadata is finalized.

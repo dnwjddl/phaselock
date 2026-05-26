@@ -1,0 +1,8 @@
+torch>=2.0.0
+diffusers>=0.25.0
+transformers>=4.35.0
+accelerate>=0.25.0
+torchvision>=0.15.0
+pillow>=9.0.0
+numpy>=1.21.0
+pyyaml>=6.0

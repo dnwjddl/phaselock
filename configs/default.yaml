@@ -1,0 +1,29 @@
+# PhaseLock Default Configuration
+# Paper: Physics in 2-Steps: Locking Motion Priors Before Visual Refinement Erases Them
+
+# Model Configuration
+model:
+  name: "THUDM/CogVideoX-5B-I2V"
+  torch_dtype: "bfloat16"
+
+# PhaseLock Algorithm Parameters
+phaselock:
+  # Stage 1: Motion Prior Extraction
+  few_steps: 2  # K_few - Number of few-step inference steps (paper default: 2)
+  
+  # Stage 2: Guided Full Generation  
+  full_steps: 50  # K_full - Number of full inference steps (paper default: 50)
+  
+  # Latent Delta Guidance Parameters
+  guidance_strength: 0.05  # lambda_0 - Initial guidance strength (paper default: 0.05)
+  guide_start: 0  # k_start - Step to start guidance (paper default: 0)
+  guide_end: 25  # k_end - Step to end guidance (paper default: K_full/2 = 25)
+
+# Generation Parameters
+generation:
+  num_frames: 49  # CogVideoX default
+  guidance_scale: 6.0  # Classifier-free guidance scale
+  fps: 8  # Output video FPS
+
+# Reproducibility
+seed: 42

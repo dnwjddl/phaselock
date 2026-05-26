@@ -36,7 +36,7 @@ PhaseLock is a **training-free** framework that significantly improves the physi
 ## Installation
 
 ```bash
-git clone https://github.com/dnwjddl/phaselock-code.git
+git clone https://github.com/dnwjddl/phaselock.git
 cd phaselock/code
 pip install -r requirements.txt
 ```

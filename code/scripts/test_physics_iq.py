@@ -3,10 +3,7 @@
 Test PhaseLock on Physics-IQ benchmark samples.
 
 Usage:
-    python scripts/test_physics_iq.py \
-        --descriptions_path path/to/descriptions.txt \
-        --switch_frames_dir path/to/switch-frames \
-        --max_samples 2
+    python scripts/test_physics_iq.py --max_samples 2
 """
 
 import argparse
@@ -21,6 +18,10 @@ from diffusers.utils import export_to_video, load_image
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from phaselock import PhaseLockPipeline, set_seed
+
+
+DESCRIPTIONS_PATH = "/home/andrew/icml2026/physics-IQ-benchmark/descriptions.txt"
+SWITCH_FRAMES_DIR = "/home/andrew/icml2026/physics-IQ-benchmark/switch-frames"
 
 
 def load_physics_iq_data(descriptions_path: str, switch_frames_dir: str):
@@ -46,20 +47,8 @@ def load_physics_iq_data(descriptions_path: str, switch_frames_dir: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Test PhaseLock on Physics-IQ")
-    parser.add_argument(
-        "--descriptions_path",
-        type=str,
-        required=True,
-        help="Path to Physics-IQ descriptions.txt",
-    )
-    parser.add_argument(
-        "--switch_frames_dir",
-        type=str,
-        required=True,
-        help="Directory containing Physics-IQ switch-frame images",
-    )
     parser.add_argument("--max_samples", type=int, default=2)
-    parser.add_argument("--output_dir", type=str, default="test_outputs")
+    parser.add_argument("--output_dir", type=str, default="/home/andrew/PhaseLock/test_outputs")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--guidance_strength", type=float, default=0.05)
     args = parser.parse_args()
@@ -67,7 +56,7 @@ def main():
     set_seed(args.seed)
     os.makedirs(args.output_dir, exist_ok=True)
     
-    data = load_physics_iq_data(args.descriptions_path, args.switch_frames_dir)
+    data = load_physics_iq_data(DESCRIPTIONS_PATH, SWITCH_FRAMES_DIR)
     samples = data[:args.max_samples]
     
     print(f"Testing PhaseLock on {len(samples)} Physics-IQ samples")

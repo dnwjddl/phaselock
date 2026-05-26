@@ -18,7 +18,6 @@ setup(
         "torchvision>=0.15.0",
         "pillow>=9.0.0",
         "numpy>=1.21.0",
-        "pyyaml>=6.0",
     ],
     extras_require={
         "dev": [

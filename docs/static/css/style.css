@@ -135,7 +135,7 @@ h1, h2, h3 { font-weight: 600; letter-spacing: 0; color: var(--text); }
   justify-content: center;
   gap: 2px 20px;
   margin-bottom: 6px;
-  font-size: 15px;
+  font-size: 16.5px;
 }
 .author {
   color: var(--accent);
@@ -150,7 +150,7 @@ h1, h2, h3 { font-weight: 600; letter-spacing: 0; color: var(--text); }
   justify-content: center;
   gap: 14px;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 14px;
   margin-bottom: 28px;
 }
 .affils span {
@@ -164,12 +164,12 @@ h1, h2, h3 { font-weight: 600; letter-spacing: 0; color: var(--text); }
   object-fit: contain;
 }
 .affil-logo-yonsei {
-  width: 18px;
-  height: 18px;
+  width: 21px;
+  height: 21px;
 }
 .affil-logo-nvidia {
-  width: 22px;
-  height: 14px;
+  width: 27px;
+  height: 17px;
 }
 
 /* ───── Buttons ───── */

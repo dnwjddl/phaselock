@@ -1,0 +1,466 @@
+{
+  "phygenbench": {
+    "title": "PhyGenBench",
+    "highlights": [
+      {
+        "id": "31",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": null,
+        "prompt": "A piece of white chalk is used to write on the rough, dark surface of a blackboard,showcasing the interaction between the chalk and the blackboard surface.",
+        "base": "videos/highlights/phygenbench/31_BASE_wan.mp4",
+        "ours": "videos/highlights/phygenbench/31_OURS_wan.mp4",
+        "local": true
+      },
+      {
+        "id": "34",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "A yellow highlighter is used to mark on the rough, brown surface of a cardboard, showcasing the interaction between the highlighter and the cardboard surface.",
+        "base": "videos/highlights/phygenbench/34_BASE_cogvideox.mp4",
+        "ours": "videos/highlights/phygenbench/34_OURS_cogvideox.mp4",
+        "local": true
+      },
+      {
+        "id": "70",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "A magnifying glass is gradually moving closer to the petals of a flower, revealing the intricate details and textures of the flower as it approaches.",
+        "base": "videos/highlights/phygenbench/70_BASE_cogvideox.mp4",
+        "ours": "videos/highlights/phygenbench/70_OURS_cogvideox.mp4",
+        "local": true
+      },
+      {
+        "id": "122",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "Equal amounts of yellow and red paint are rapidly combined, with the mixture being vigorously stirred until fully blended.",
+        "base": "videos/highlights/phygenbench/122_BASE_cogvideox.mp4",
+        "ours": "videos/highlights/phygenbench/122_OURS_cogvideox.mp4",
+        "local": true
+      }
+    ],
+    "remote": [
+      {
+        "id": "71",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": null,
+        "prompt": "A clear plastic straw is slowly inserted into a glass of crystal-clear water, revealing the fascinating visual changes and reflections that occur as the straw interacts with the liquid.",
+        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[OURS]_wan.mp4",
+        "local": false
+      },
+      {
+        "id": "38",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "A glistening dewdrop is sliding gracefully across the smooth surface of a waxed apple, accentuating its shape as it moves",
+        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/38_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/38_[OURS]_cogvideox.mp4",
+        "local": false
+      },
+      {
+        "id": "99",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "A timelapse captures the gradual transformation of ice cream as the temperature rises significantly.",
+        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/99_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/99_[OURS]_cogvideox.mp4",
+        "local": false
+      },
+      {
+        "id": "126",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": null,
+        "prompt": "A piece of copper is ignited, emitting a vivid and unique flame as it burns steadily.",
+        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/126_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/126_[OURS]_cogvideox.mp4",
+        "local": false
+      }
+    ]
+  },
+  "physics-iq": {
+    "title": "Physics-IQ",
+    "highlights": [
+      {
+        "id": "0040",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "crop",
+        "prompt": "A tangerine that has been cut in half is placed on a glass cutting board. A knife is slicing through the tangerine. Static shot with no camera movement.",
+        "base": "videos/highlights/physics-iq/0040_BASE_wan.mp4",
+        "ours": "videos/highlights/physics-iq/0040_OURS_wan.mp4",
+        "local": true
+      },
+      {
+        "id": "0111",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fire",
+        "prompt": "A lit match is being lowered into a glass of water. Static shot with no camera movement.",
+        "base": "videos/highlights/physics-iq/0111_BASE_wan.mp4",
+        "ours": "videos/highlights/physics-iq/0111_OURS_wan.mp4",
+        "local": true
+      },
+      {
+        "id": "0143",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "water_potato",
+        "prompt": "A potato is held by a grabber tool and dropped into a tall glass containing blue liquid with a band of green tape marking a level on the glass. Static shot with no camera movement.",
+        "base": "videos/highlights/physics-iq/0143_BASE_wan.mp4",
+        "ours": "videos/highlights/physics-iq/0143_OURS_wan.mp4",
+        "local": true
+      },
+      {
+        "id": "0133",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "water-paper",
+        "prompt": "A grabber tool is holding a crumpled piece of paper over a bowl of water on a wooden table. The grabber then releases the crumpled paper onto the bowl. Static shot with no camera movement.",
+        "base": "videos/highlights/physics-iq/0133_BASE_wan.mp4",
+        "ours": "videos/highlights/physics-iq/0133_OURS_wan.mp4",
+        "local": true
+      }
+    ],
+    "remote": [
+      {
+        "id": "0148",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "ball_roll",
+        "prompt": "A small white lampshade is on a light wood surface. A grey tennis ball rolls out of the black tube sitting on the table and rolls on the table towards the right. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0148_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0148_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0151",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "ball_roll",
+        "prompt": "An olive green fabric box is on a light wood surface. A brown tennis ball rolls out of the black tube sitting on the table and rolls towards the box. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0151_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0151_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0152",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "ball_roll",
+        "prompt": "An olive green fabric box is on a light wood surface. A brown tennis ball rolls out of the black tube sitting on the table and rolls towards the box. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0152_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0152_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0153",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "ball_roll",
+        "prompt": "An olive green fabric box is on a light wood surface. A brown tennis ball rolls out of the black tube sitting on the table and rolls towards the box. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0153_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0153_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0041",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "crop",
+        "prompt": "A tangerine that has been cut in half is placed on a glass cutting board. A knife is slicing through the tangerine. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/crop/0041_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/crop/0041_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0047",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "drop",
+        "prompt": "A grabber tool holding a white domino drops the domino into a dark-colored liquid in a blue mug that is on a wooden surface. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0047_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0047_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0124",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "drop",
+        "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0124_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0124_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0125",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "drop",
+        "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0125_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0125_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0126",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "drop",
+        "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0126_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0126_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0059",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "duck_drop",
+        "prompt": "A yellow rubber ducky is suspended above an open dark green fabric box on a wooden table. The duck is then released. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0059_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0059_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0060",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "duck_drop",
+        "prompt": "A yellow rubber ducky is suspended above an open dark green fabric box on a wooden table. The duck is then released. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0060_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0060_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0016",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fall_ball",
+        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0017",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fall_ball",
+        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0017_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0017_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0018",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fall_ball",
+        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0018_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0018_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0139",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fire",
+        "prompt": "A piece of folded paper is placed on a glass cutting board. The paper is being burnt and white smoke is emitting from it. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fire/0139_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fire/0139_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0141",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "fire",
+        "prompt": "A piece of folded paper is placed on a glass cutting board. The paper is being burnt and white smoke is emitting from it. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fire/0141_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fire/0141_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0086",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "flow-water",
+        "prompt": "A yellow rubber ducky is placed in an empty black baking pan on a wooden table.  A beverage dispenser with red liquid inside sits on a woven basket behind it. The liquid pours on the duck from the dispenser. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/flow-water/0086_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/flow-water/0086_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0074",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "light",
+        "prompt": "A blue rectangular wooden block is placed on a black rotating turntable that rotates clockwise illuminated by a spotlight casting a long shadow on the wall behind it. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/light/0074_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/light/0074_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0083",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "light",
+        "prompt": "A small statue made of porcelain illuminated by a spotlight on a rotating base that rotates clockwise. The spotlight casts a large shadow of the statue onto the wall behind it. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/light/0083_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/light/0083_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0116",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "mag-ball",
+        "prompt": "A tennis ball attached to a magnet and string is hanging in front of a mirror and creating an illusion of two tennis balls. The string lowers the ball slowly. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/mag-ball/0116_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/mag-ball/0116_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0169",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "no_ball",
+        "prompt": "A woven basket is hanging from a rope with a strong magnet attached to the bottom. An orange tennis ball is placed on a table beneath it. The basket is lowered and covers the ball and then the basket starts to lift again. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/no_ball/0169_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/no_ball/0169_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0131",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "paint",
+        "prompt": "A clear acrylic sheet placed on a wooden table with a small dollop of red paint. A rotating paintbrush attached to a rotating platform rotates clockwise and goes through the paint. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/paint/0131_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/paint/0131_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0192",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "push",
+        "prompt": "A 30lb kettlebell is slowly lowered onto a white styrofoam cup placed on a wooden table on its side. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/push/0192_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/push/0192_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0177",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "rotate",
+        "prompt": "A teapot is placed on a rotating display that rotates clockwise. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/rotate/0177_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/rotate/0177_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0194",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "strength",
+        "prompt": "A 30lb kettlebell and a green piece of paper are lowered onto two pillows. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/strength/0194_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/strength/0194_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0144",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "water_potato",
+        "prompt": "A potato is held by a grabber tool and dropped into a tall glass containing blue liquid with a band of green tape marking a level on the glass. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/water_potato/0144_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/water_potato/0144_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0134",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "water-paper",
+        "prompt": "A grabber tool is holding a crumpled piece of paper over a bowl of water on a wooden table. The grabber then releases the crumpled paper onto the bowl. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/water-paper/0134_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/water-paper/0134_[OURS]_wan_v9_lowfreq.mp4",
+        "local": false
+      },
+      {
+        "id": "0023",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "ball_roll",
+        "prompt": "A light wood coffee table in the foreground with a black pipe on the end of the table. A grey tennis ball rolls out of the pipe towards the right and onto the table. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0023_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0023_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      },
+      {
+        "id": "0038",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "balloon",
+        "prompt": "A black balloon is attached to a fixed electric air pump hose on a table with a plain wall in the background. Air is being pumped in the balloon. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/balloon/0038_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/balloon/0038_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      },
+      {
+        "id": "0016",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "fall_ball",
+        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      },
+      {
+        "id": "0018",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "fall_ball",
+        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0018_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0018_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      },
+      {
+        "id": "0116",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "mag-ball",
+        "prompt": "A tennis ball attached to a magnet and string is hanging in front of a mirror and creating an illusion of two tennis balls. The string lowers the ball slowly. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/mag-ball/0116_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/mag-ball/0116_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      },
+      {
+        "id": "0068",
+        "model": "CogVideoX",
+        "model_id": "cogvideox",
+        "category": "still",
+        "prompt": "A glass beverage dispenser filled with a bright red liquid is set on a wicker base. Under the dispenser there is a glass half filled with red liquid. Static shot with no camera movement.",
+        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/still/0068_[BASE]_cogvideox.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/still/0068_[OURS]_cogvideox_v9_s005.mp4",
+        "local": false
+      }
+    ]
+  }
+}

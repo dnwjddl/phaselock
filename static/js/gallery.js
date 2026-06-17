@@ -29,9 +29,6 @@
   const renderPair = (pair) => {
     const card = document.createElement('article');
     card.className = 'pair-card';
-    const catTag = pair.category
-      ? `<span class="pair-id">${pair.category}</span>`
-      : '';
     card.innerHTML = `
       <div class="pair-videos">
         <div class="pair-video-wrap">
@@ -46,8 +43,6 @@
         </div>
       </div>
       <div class="pair-meta">
-        <span class="pair-id">${pair.model} · #${pair.id}</span>
-        ${catTag}
         ${prompt(pair.prompt)}
       </div>
     `;

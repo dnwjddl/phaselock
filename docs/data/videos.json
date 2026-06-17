@@ -142,16 +142,6 @@
         "local": false
       },
       {
-        "id": "0143",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": "water_potato",
-        "prompt": "A potato is held by a grabber tool and dropped into a tall glass containing blue liquid with a band of green tape marking a level on the glass. Static shot with no camera movement.",
-        "base": "videos/highlights/physics-iq/0143_BASE_wan.mp4",
-        "ours": "videos/highlights/physics-iq/0143_OURS_wan.mp4",
-        "local": true
-      },
-      {
         "id": "0060",
         "model": "Wan",
         "model_id": "wan",
@@ -160,6 +150,16 @@
         "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0060_[BASE]_wan.mp4",
         "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/duck_drop/0060_[OURS]_wan_v9_lowfreq.mp4",
         "local": false
+      },
+      {
+        "id": "0143",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": "water_potato",
+        "prompt": "A potato is held by a grabber tool and dropped into a tall glass containing blue liquid with a band of green tape marking a level on the glass. Static shot with no camera movement.",
+        "base": "videos/highlights/physics-iq/0143_BASE_wan.mp4",
+        "ours": "videos/highlights/physics-iq/0143_OURS_wan.mp4",
+        "local": true
       },
       {
         "id": "0017",
@@ -332,26 +332,6 @@
         "local": false
       },
       {
-        "id": "0152",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": "ball_roll",
-        "prompt": "An olive green fabric box is on a light wood surface. A brown tennis ball rolls out of the black tube sitting on the table and rolls towards the box. Static shot with no camera movement.",
-        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0152_[BASE]_wan.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0152_[OURS]_wan_v9_lowfreq.mp4",
-        "local": false
-      },
-      {
-        "id": "0153",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": "ball_roll",
-        "prompt": "An olive green fabric box is on a light wood surface. A brown tennis ball rolls out of the black tube sitting on the table and rolls towards the box. Static shot with no camera movement.",
-        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0153_[BASE]_wan.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/ball_roll/0153_[OURS]_wan_v9_lowfreq.mp4",
-        "local": false
-      },
-      {
         "id": "0074",
         "model": "Wan",
         "model_id": "wan",
@@ -399,26 +379,6 @@
         "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
         "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0124_[BASE]_wan.mp4",
         "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0124_[OURS]_wan_v9_lowfreq.mp4",
-        "local": false
-      },
-      {
-        "id": "0125",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": "drop",
-        "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
-        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0125_[BASE]_wan.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0125_[OURS]_wan_v9_lowfreq.mp4",
-        "local": false
-      },
-      {
-        "id": "0126",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": "drop",
-        "prompt": "A yellow mug is held by a grabber tool in front of a white projection screen with a concrete brick positioned beneath it. The grabber releases the mug. Static shot with no camera movement.",
-        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0126_[BASE]_wan.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/drop/0126_[OURS]_wan_v9_lowfreq.mp4",
         "local": false
       }
     ]

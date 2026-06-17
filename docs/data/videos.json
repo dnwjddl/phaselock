@@ -41,7 +41,9 @@
         "base": "videos/highlights/phygenbench/70_BASE_cogvideox.mp4",
         "ours": "videos/highlights/phygenbench/70_OURS_cogvideox.mp4",
         "local": true
-      },
+      }
+    ],
+    "remote": [
       {
         "id": "122",
         "model": "CogVideoX",
@@ -51,9 +53,7 @@
         "base": "videos/highlights/phygenbench/122_BASE_cogvideox.mp4",
         "ours": "videos/highlights/phygenbench/122_OURS_cogvideox.mp4",
         "local": true
-      }
-    ],
-    "remote": [
+      },
       {
         "id": "38",
         "model": "CogVideoX",

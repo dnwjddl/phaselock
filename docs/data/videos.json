@@ -3,14 +3,14 @@
     "title": "PhyGenBench",
     "highlights": [
       {
-        "id": "31",
+        "id": "71",
         "model": "Wan",
         "model_id": "wan",
         "category": null,
-        "prompt": "A piece of white chalk is used to write on the rough, dark surface of a blackboard,showcasing the interaction between the chalk and the blackboard surface.",
-        "base": "videos/highlights/phygenbench/31_BASE_wan.mp4",
-        "ours": "videos/highlights/phygenbench/31_OURS_wan.mp4",
-        "local": true
+        "prompt": "A clear plastic straw is slowly inserted into a glass of crystal-clear water, revealing the fascinating visual changes and reflections that occur as the straw interacts with the liquid.",
+        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[BASE]_wan.mp4",
+        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[OURS]_wan.mp4",
+        "local": false
       },
       {
         "id": "34",
@@ -20,6 +20,16 @@
         "prompt": "A yellow highlighter is used to mark on the rough, brown surface of a cardboard, showcasing the interaction between the highlighter and the cardboard surface.",
         "base": "videos/highlights/phygenbench/34_BASE_cogvideox.mp4",
         "ours": "videos/highlights/phygenbench/34_OURS_cogvideox.mp4",
+        "local": true
+      },
+      {
+        "id": "31",
+        "model": "Wan",
+        "model_id": "wan",
+        "category": null,
+        "prompt": "A piece of white chalk is used to write on the rough, dark surface of a blackboard,showcasing the interaction between the chalk and the blackboard surface.",
+        "base": "videos/highlights/phygenbench/31_BASE_wan.mp4",
+        "ours": "videos/highlights/phygenbench/31_OURS_wan.mp4",
         "local": true
       },
       {
@@ -44,16 +54,6 @@
       }
     ],
     "remote": [
-      {
-        "id": "71",
-        "model": "Wan",
-        "model_id": "wan",
-        "category": null,
-        "prompt": "A clear plastic straw is slowly inserted into a glass of crystal-clear water, revealing the fascinating visual changes and reflections that occur as the straw interacts with the liquid.",
-        "base": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[BASE]_wan.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/PhyGenBench/71_[OURS]_wan.mp4",
-        "local": false
-      },
       {
         "id": "38",
         "model": "CogVideoX",

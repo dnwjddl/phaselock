@@ -90,16 +90,6 @@
     "title": "Physics-IQ",
     "highlights": [
       {
-        "id": "0016",
-        "model": "CogVideoX",
-        "model_id": "cogvideox",
-        "category": "fall_ball",
-        "prompt": "A blue grabber tool holds a tennis ball above a pile of green kinetic sand on a wooden table. The grabber then releases the ball. Static shot with no camera movement.",
-        "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[BASE]_cogvideox.mp4",
-        "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/fall_ball/0016_[OURS]_cogvideox_v9_s005.mp4",
-        "local": false
-      },
-      {
         "id": "0018",
         "model": "CogVideoX",
         "model_id": "cogvideox",
@@ -128,9 +118,7 @@
         "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/no_ball/0169_[BASE]_wan.mp4",
         "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/no_ball/0169_[OURS]_wan_v9_lowfreq.mp4",
         "local": false
-      }
-    ],
-    "remote": [
+      },
       {
         "id": "0194",
         "model": "Wan",
@@ -140,7 +128,9 @@
         "base": "https://phaselock-physical-video.github.io/samples/Physics-IQ/strength/0194_[BASE]_wan.mp4",
         "ours": "https://phaselock-physical-video.github.io/samples/Physics-IQ/strength/0194_[OURS]_wan_v9_lowfreq.mp4",
         "local": false
-      },
+      }
+    ],
+    "remote": [
       {
         "id": "0116",
         "model": "Wan",

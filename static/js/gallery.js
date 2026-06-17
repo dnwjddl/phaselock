@@ -33,19 +33,27 @@
       <div class="pair-videos">
         <div class="pair-video-wrap">
           <span class="label label-base">Base</span>
-          <video src="${safeSrc(pair.base)}" muted loop playsinline preload="metadata"
-                 onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+          <video src="${safeSrc(pair.base)}" muted loop playsinline preload="metadata"></video>
         </div>
         <div class="pair-video-wrap">
           <span class="label label-ours">Ours</span>
-          <video src="${safeSrc(pair.ours)}" muted loop playsinline preload="metadata"
-                 onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+          <video src="${safeSrc(pair.ours)}" muted loop playsinline preload="metadata"></video>
         </div>
       </div>
       <div class="pair-meta">
         ${prompt(pair.prompt)}
       </div>
     `;
+    const videos = $$('video', card);
+    const playAll = () => {
+      videos.forEach((video) => {
+        const request = video.play();
+        if (request) request.catch(() => {});
+      });
+    };
+    const pauseAll = () => videos.forEach((video) => video.pause());
+    card.addEventListener('mouseenter', playAll);
+    card.addEventListener('mouseleave', pauseAll);
     return card;
   };
 
